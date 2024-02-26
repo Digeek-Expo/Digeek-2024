@@ -12,7 +12,9 @@
   "dependencies": {
     "@astrojs/check": "^0.5.5",
     "@astrojs/tailwind": "^5.1.0",
+    "@supabase/supabase-js": "^2.39.7",
     "astro": "^4.4.3",
+    "dotenv": "^16.4.5",
     "node.js": "^0.0.1-security",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3"
