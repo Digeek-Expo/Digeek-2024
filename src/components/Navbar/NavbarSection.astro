@@ -1,0 +1,13 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<div
+  class="after:w-0 hover:after:w-full relative after:opacity-0 hover:after:opacity-100 after:bg-[#FF42BA] after:absolute after:block after:bottom-0 after:h-[2px] after:duration-200 flex items-center"
+>
+  <a href={title == "inicio" ? "/" : title} class="px-2">{title}</a>
+</div>
