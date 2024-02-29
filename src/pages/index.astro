@@ -4,43 +4,31 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Digeek 2024">
-  <main class="h-[88%] w-full bg-black flex flex-col justify-between">
+  <main class="w-full h-full lg:h-auto bg-black flex flex-col justify-between">
 
     
     <!-- Content -->
-    <div class="h-full flex flex-col justify-between lg:flex-row">
+    <div class="h-full flex flex-col justify-between lg:hidden">
 
+      <!-- Movil content -->
 
-      <!-- Only lg content -->
-      <div class="w-[60%] hidden lg:flex lg:flex-col justify-start items-start p-20">
-        <span class="text-9xl text-white font-black tracking-wide">Digeek</br>2024</span>
-      </div>
-
-      
-
-      <div class="w-[40%] h-full items-end hidden lg:flex flex-col justify-end pb-14">
-
-        <div class="h-auto w-full bg-[#7678FF] rounded-l-[30px] p-5">
-
-          <span class="text-4xl text-white font-semibold">¿Qué es?</span>
-    
+      <div class="page-2 h-[50%] w-full flex-col justify-start hidden">
+        <div class="bg-[#7678FF] w-full h-[60%] rounded-b-[30px] p-5">
+          <span class="text-4xl text-white font-semibold">Misión</span>
+  
           <div class="w-full mt-2">
-            <p class="text-white text-base">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur id sem interdum dui venenatis interdum. Phasellus vulputate risus metus, vel auctor mauris scelerisque vitae. Fusce dictum neque a neque laoreet, a iaculis est tristique. Fusce suscipit consectetur mi, id dictum diam.</p>
+            <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur id sem interdum dui venenatis interdum. Phasellus vulputate risus metus, vel auctor mauris scelerisque vitae. Fusce dictum neque a neque laoreet, a iaculis est tristique. Fusce suscipit consectetur mi, id dictum diam.</p>
           </div>
-    
-        </div>
 
+        </div>
       </div>
 
+      <div class="page-1 h-[50%] w-full lg:hidden flex justify-start items-center pl-10">
+        <span class="text-7xl text-white font-black tracking-wide">Digeek</br>2024</span>
+      </div>
 
-
-
-
-      <div class="h-[50%] w-full lg:hidden">
-        <video width="320" height="240" autoplay>
-          <source src="../resources/test.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>      
+      <div id="page-3-t" class="page-3 h-[50%] w-full lg:hidden justify-start items-center pl-10 hidden flex">
+        <span class="text-7xl text-white font-black tracking-wide">Valores</span>
       </div>
   
       <div class="h-[3%] flex justify-center w-full lg:hidden">
@@ -54,21 +42,144 @@ import Layout from "../layouts/Layout.astro";
 
       <div class="h-[47%] bg-[#7678FF] rounded-t-[30px] p-5 lg:hidden visible">
 
-        <span class="text-4xl text-white font-semibold">¿Qué es?</span>
+        <span class="page-1 text-4xl text-white font-semibold">¿Qué es?</span>
+
+        <div class="page-1 w-full mt-2">
+          <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur id sem interdum dui venenatis interdum. Phasellus vulputate risus metus, vel auctor mauris scelerisque vitae. Fusce dictum neque a neque laoreet, a iaculis est tristique. Fusce suscipit consectetur mi, id dictum diam.</p>
+        </div>
+
+        <span class="page-2 text-4xl text-white font-semibold hidden">Misión</span>
   
-        <div class="w-full mt-2">
+        <div class="page-2 w-full mt-2 hidden">
+          <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur id sem interdum dui venenatis interdum. Phasellus vulputate risus metus, vel auctor mauris scelerisque vitae. Fusce dictum neque a neque laoreet, a iaculis est tristique. Fusce suscipit consectetur mi, id dictum diam.</p>
+        </div>
+
+        <span class="page-3 text-4xl text-white font-semibold hidden">Ambición</span>
+  
+        <div class="page-3 w-full mt-2 hidden">
           <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur id sem interdum dui venenatis interdum. Phasellus vulputate risus metus, vel auctor mauris scelerisque vitae. Fusce dictum neque a neque laoreet, a iaculis est tristique. Fusce suscipit consectetur mi, id dictum diam.</p>
         </div>
   
       </div>
     </div>
 
+
+
+
+    <!-- Page 1 -->
+
+
+    <div id="page-1-lg" class="hidden lg:flex flex-col justify-between items-center h-[600px]">
+
+      <div class="w-full h-1/2 lg:flex lg:flex-col justify-start items-start p-20">
+        <span class="text-9xl text-white font-black tracking-wide">Digeek</br>2024</span>
+      </div>
+  
+      
+  
+      <div class="w-full h-1/2 items-end lg:flex flex-col justify-end pb-14">
+  
+        <div class="h-auto w-[40%] bg-[#7678FF] rounded-l-[30px] p-5">
+  
+          <span class="text-4xl text-white font-semibold">¿Qué es?</span>
+    
+          <div class="w-full mt-2">
+            <p class="text-white text-base">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur id sem interdum dui venenatis interdum. Phasellus vulputate risus metus, vel auctor mauris scelerisque vitae. Fusce dictum neque a neque laoreet, a iaculis est tristique. Fusce suscipit consectetur mi, id dictum diam.</p>
+          </div>
+    
+        </div>
+  
+      </div>
+
+
+    </div>
+
+
+
+
+    <!-- Page 2 -->
+
+    <div id="page-2-lg" class="h-[900px] justify-between hidden lg:flex-col lg:flex">
+
+
+      <!-- Only lg content -->
+      <div class="flex justify-between items-center h-1/2 w-full">
+        <div class="h-[60%] rounded-r-[30px] bg-[#7678FF] w-[40%] flex justify-start items-center pl-5">
+          <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur id sem interdum dui venenatis interdum. Phasellus vulputate risus metus, vel auctor mauris scelerisque vitae. Fusce dictum neque a neque laoreet, a iaculis est tristique. Fusce suscipit consectetur mi, id dictum diam.</p>
+        </div>
+
+        <div class="flex justify-center items-center w-[60%]">
+          <span class="text-8xl text-white font-black tracking-wide">Misión</span>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center h-1/2 w-full">
+        <div class="flex justify-center items-center w-[60%]">
+          <span class="text-8xl text-white font-black tracking-wide">Visión</span>
+        </div>
+
+        <div class="h-[60%] rounded-l-[30px] bg-[#7678FF] w-[40%] flex justify-start items-center pl-5">
+          <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur id sem interdum dui venenatis interdum. Phasellus vulputate risus metus, vel auctor mauris scelerisque vitae. Fusce dictum neque a neque laoreet, a iaculis est tristique. Fusce suscipit consectetur mi, id dictum diam.</p>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Page 3 -->
+
+
+    <div id="page-3-lg" class="hidden lg:flex justify-between w-full items-center h-[900px]">
+
+      <div class="flex flex-col justify-around items-center w-[80%]">
+
+        <div class="flex justify-between bg-[#7678FF] rounded-r-[30px] p-5 items-center mb-5">
+          <div class="mr-5"><span class="text-4xl text-white font-black tracking-wide">AMBICIÓN</span></div>
+          <div class="w-[60%]">
+            <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur id sem interdum dui venenatis interdum. Phasellus vulputate risus metus, vel auctor mauris scelerisque vitae. Fusce dictum neque a neque laoreet, a iaculis est tristique. Fusce suscipit consectetur mi, id dictum diam.</p>
+          </div>
+        </div>
+
+        <div class="flex justify-between bg-[#7678FF] rounded-r-[30px] p-5 items-center mb-5">
+          <div class="mr-5"><span class="text-4xl text-white font-black tracking-wide">HONESTIDAD</span></div>
+          <div class="w-[60%]">
+            <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur id sem interdum dui venenatis interdum. Phasellus vulputate risus metus, vel auctor mauris scelerisque vitae. Fusce dictum neque a neque laoreet, a iaculis est tristique. Fusce suscipit consectetur mi, id dictum diam.</p>
+          </div>
+        </div>
+
+        <div class="flex justify-between bg-[#7678FF] rounded-r-[30px] p-5 items-center mb-5">
+          <div class="mr-5"><span class="text-4xl text-white font-black tracking-wide">PASIÓN</span></div>
+          <div class="w-[60%]">
+            <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur id sem interdum dui venenatis interdum. Phasellus vulputate risus metus, vel auctor mauris scelerisque vitae. Fusce dictum neque a neque laoreet, a iaculis est tristique. Fusce suscipit consectetur mi, id dictum diam.</p>
+          </div>
+        </div>
+
+        <div class="flex justify-between bg-[#7678FF] rounded-r-[30px] p-5 items-center mb-5">
+          <div class="mr-5"><span class="text-4xl text-white font-black tracking-wide">INNOVACIÓN</span></div>
+          <div class="w-[60%]">
+            <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur id sem interdum dui venenatis interdum. Phasellus vulputate risus metus, vel auctor mauris scelerisque vitae. Fusce dictum neque a neque laoreet, a iaculis est tristique. Fusce suscipit consectetur mi, id dictum diam.</p>
+          </div>
+        </div>
+        
+
+      </div>
+
+
+      <div class="flex justify-center items-center w-[20%]">
+        <span class="text-8xl text-white font-black tracking-wide">V</br>A</br>L</br>O</br>R</br>E</br>S</span>
+      </div>
+
+
+    </div>
+
+
     
 
-    <div class="h-[3%] lg:flex justify-center w-full hidden mb-10">
-      <div id="button-1" class="bg-white transitions w-[50px] h-[7px]"></div>
-      <div id="button-2" class="bg-white transitions opacity-25 w-[50px] h-[7px] mx-3"></div>
-      <div id="button-3" class="bg-white transitions opacity-25 w-[50px] h-[7px]"></div>
+    <div class="h-[3%] lg:flex justify-center w-full hidden mb-10 fixed bottom-0">
+      <div id="button-1-lg" class="bg-white transitions w-[50px] h-[7px] hover:cursor-pointer"></div>
+      <div id="button-2-lg" class="bg-white transitions opacity-25 w-[50px] h-[7px] mx-3 hover:cursor-pointer"></div>
+      <div id="button-3-lg" class="bg-white transitions opacity-25 w-[50px] h-[7px] hover:cursor-pointer"></div>
     </div>
 
     <style>
