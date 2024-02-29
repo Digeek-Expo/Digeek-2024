@@ -51,11 +51,18 @@ const MobilNavigationPage = ({ setOpen }) => {
 };
 
 const MobilNavigationLabel = ({ label }) => {
+  const getIcon = {
+    inicio: "/houseWhite.png",
+    registro: "/person.png",
+    webinars: "/calendarWhite.png",
+    FAQ: "/questionWhite.png",
+  };
+
   return (
     <a
       href={label !== "inicio" ? `/${label}` : "/"}
       className={
-        "px-6 py-4 flex relative before:h-full before:w-[5px] before:hover:bg-white before:bg-transparent before:absolute before:left-0 before:top-0 " +
+        "px-6 py-4 flex relative gap-4 items-center before:h-full before:w-[5px] before:hover:bg-white before:bg-transparent before:absolute before:left-0 before:top-0 " +
         (window.location.pathname != "/"
           ? window.location.pathname == `/${label}`
             ? "before:bg-white"
@@ -65,6 +72,19 @@ const MobilNavigationLabel = ({ label }) => {
           : "before:bg-transparent")
       }
     >
+      <img
+        src={getIcon[label]}
+        className={
+          "w-10 h-10 opacity-80" +
+          (window.location.pathname != "/"
+            ? window.location.pathname == `/${label}`
+              ? "opacity-100"
+              : ""
+            : label == "inicio"
+            ? "opacity-100"
+            : "")
+        }
+      />
       {label}
     </a>
   );
