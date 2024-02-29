@@ -1,7 +1,84 @@
 ---
 import Layout from "../layouts/Layout.astro";
+
 ---
 
 <Layout title="Digeek 2024">
-  <main>Home page digeek</main>
+  <main class="h-[88%] w-full bg-black flex flex-col justify-between">
+
+    
+    <!-- Content -->
+    <div class="h-full flex flex-col justify-between lg:flex-row">
+
+
+      <!-- Only lg content -->
+      <div class="w-[60%] hidden lg:flex lg:flex-col justify-start items-start p-20">
+        <span class="text-9xl text-white font-black tracking-wide">Digeek</br>2024</span>
+      </div>
+
+      
+
+      <div class="w-[40%] h-full items-end hidden lg:flex flex-col justify-end pb-14">
+
+        <div class="h-auto w-full bg-[#7678FF] rounded-l-[30px] p-5">
+
+          <span class="text-4xl text-white font-semibold">¿Qué es?</span>
+    
+          <div class="w-full mt-2">
+            <p class="text-white text-base">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur id sem interdum dui venenatis interdum. Phasellus vulputate risus metus, vel auctor mauris scelerisque vitae. Fusce dictum neque a neque laoreet, a iaculis est tristique. Fusce suscipit consectetur mi, id dictum diam.</p>
+          </div>
+    
+        </div>
+
+      </div>
+
+
+
+
+
+      <div class="h-[50%] w-full lg:hidden">
+        <video width="320" height="240" autoplay>
+          <source src="../resources/test.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>      
+      </div>
+  
+      <div class="h-[3%] flex justify-center w-full lg:hidden">
+        <div id="button-1" class="bg-white transitions w-[50px] h-[7px]"></div>
+        <div id="button-2" class="bg-white transitions opacity-25 w-[50px] h-[7px] mx-3"></div>
+        <div id="button-3" class="bg-white transitions opacity-25 w-[50px] h-[7px]"></div>
+  
+      </div>
+      
+
+
+      <div class="h-[47%] bg-[#7678FF] rounded-t-[30px] p-5 lg:hidden visible">
+
+        <span class="text-4xl text-white font-semibold">¿Qué es?</span>
+  
+        <div class="w-full mt-2">
+          <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur id sem interdum dui venenatis interdum. Phasellus vulputate risus metus, vel auctor mauris scelerisque vitae. Fusce dictum neque a neque laoreet, a iaculis est tristique. Fusce suscipit consectetur mi, id dictum diam.</p>
+        </div>
+  
+      </div>
+    </div>
+
+    
+
+    <div class="h-[3%] lg:flex justify-center w-full hidden mb-10">
+      <div id="button-1" class="bg-white transitions w-[50px] h-[7px]"></div>
+      <div id="button-2" class="bg-white transitions opacity-25 w-[50px] h-[7px] mx-3"></div>
+      <div id="button-3" class="bg-white transitions opacity-25 w-[50px] h-[7px]"></div>
+    </div>
+
+    <style>
+      .transitions {
+        transition: all ease .3s;
+      }
+    </style>
+
+    <script src="../js/index.js"></script>
+
+
+  </main>
 </Layout>
