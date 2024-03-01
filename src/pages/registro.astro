@@ -1,7 +1,16 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import RegistrationForm from "../components/Registro/RegistrationForm.jsx";
 ---
 
 <Layout title="Digeek 2024">
-  <main>Registro</main>
+  <main
+    class="w-full pb-10 md:py-0 md:h-[calc(100vh-100px)] flex flex-col md:flex-row justify-center border-2 items-center"
+  >
+    <RegistrationForm client:only />
+    <img
+      src="/Logo.png"
+      class="w-[200px] md:w-[500px] h-fit object-cover order-first md:-order-first"
+    />
+  </main>
 </Layout>
