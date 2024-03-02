@@ -3,5 +3,70 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Digeek 2024">
-  <main>faq</main>
+  <main class=" bg-[#141414] w-full h-screen py-24 px-64 text-white">
+    <section class=" border-b-2" id="section1">
+      <button type="button" class="focus:outline-none flex flex-row pt-5 pb-3 items-center cursor-pointer w-full">
+        <label class=" cursor-pointer block relative text-4xl font-semibold">¿Cuándo es Digeek?</label>
+        <img src="../../public/down-arrow.png" class="flex w-9 h-9 mt-2 justify-end"/>
+      </button>
+      <div class="answer overflow-hidden transition-max-height pb-3">
+        <p class="text-2xl">no se</p>
+      </div>
+    </section>
+    <section class=" border-b-2" id="section2">
+      <button type="button" class="focus:outline-none flex flex-row pt-5 pb-3 items-center cursor-pointer w-full">
+        <label class=" cursor-pointer block relative text-4xl font-semibold">¿Cómo me registro?</label>
+        <img src="../../public/down-arrow.png" class="flex w-9 h-9 mt-2 justify-end"/>
+      </button>
+      <div class="answer overflow-hidden transition-max-height pb-3">
+        <p class="text-2xl">no se</p>
+      </div>
+    </section>
+    <section class=" border-b-2" id="section3">
+      <button type="button" class="focus:outline-none flex flex-row pt-5 pb-3 items-center cursor-pointer w-full">
+        <label class=" cursor-pointer block relative text-4xl font-semibold">¿Cuáles son las etapas del evento?</label>
+        <img src="../../public/down-arrow.png" class="flex w-9 h-9 mt-2 justify-end"/>
+      </button>
+      <div class="answer overflow-hidden transition-max-height pb-3">
+        <p class="text-2xl">no se</p>
+      </div>
+    </section>
+    <section class=" border-b-2" id="section4">
+      <button type="button" class="focus:outline-none flex flex-row pt-5 pb-3 items-center cursor-pointer w-full">
+        <label class=" cursor-pointer block relative text-4xl font-semibold">¿Dónde es Digeek?</label>
+        <img src="../../public/down-arrow.png" class="flex w-9 h-9 mt-2 justify-end"/>
+      </button>
+      <div class="answer overflow-hidden transition-max-height pb-3">
+        <p class="text-2xl">no se</p>
+      </div>
+    </section>
+
+    <style>
+      .answer {
+        max-height: 0;
+      }
+
+      .transition-max-height {
+        transition: max-height 0.8s ease;
+      }
+    </style>
+    <script>
+      const sections = document.querySelectorAll('section');
+
+sections.forEach(section => {
+  const button = section.querySelector('button');
+  const answer = section.querySelector('.answer') as HTMLElement; // Utilizar HTMLElement
+
+  if (button && answer) {
+    button.addEventListener('click', () => {
+      const isHidden = getComputedStyle(answer).maxHeight === '0px';
+      answer.style.maxHeight = isHidden ? `${answer.scrollHeight}px` : '0';
+    });
+  }
+});
+
+    </script>
+  </main>
 </Layout>
+
+
