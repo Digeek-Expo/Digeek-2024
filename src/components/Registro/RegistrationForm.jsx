@@ -2,6 +2,8 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
 
+
+
 const RegistrationForm = () => {
   const [image, setImage] = useState(null);
 
@@ -26,6 +28,21 @@ const RegistrationForm = () => {
     imagen: Yup.mixed().required("Obligatorio"),
   });
 
+  const insertarDatosEnBD = async (datos) => {
+    try {
+      const { data, error } = await supabaseClient
+        .from('users')
+        .upsert([datos]);
+      if (error) {
+        console.error(error);
+      } else {
+        console.log('Datos enviados correctamente:', data);
+      }
+    } catch (error) {
+      console.error('Error al insertar en la base de datos:', error);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center md:items-end md:w-1/3 w-4/5">
       <h1 className="text-4xl text-[#7678FF] font-bold">Registro</h1>
@@ -38,12 +55,18 @@ const RegistrationForm = () => {
           imagen: null,
         }}
         validationSchema={registroSchema}
-        onSubmit={(values, { setSubmitting }) => {
+      onSubmit={(values, { setSubmitting }) => {
+        if (values.nombre && values.correo && values.escuela && values.terminos && values.imagen) {
+          insertarDatosEnBD(values);
           setTimeout(() => {
             alert(JSON.stringify({ ...values }, null, 2));
             setSubmitting(false);
           }, 400);
-        }}
+        } else {
+          alert('Por favor, completa todos los campos antes de enviar el formulario.');
+          setSubmitting(false);
+        }
+      }}
       >
         {({ isSubmitting, errors, values }) => (
           <Form className="flex flex-col gap-8 w-full items-end font-thin mt-10">

@@ -6,11 +6,11 @@ dotenv.config();
 const DBURL = process.env.DBURL;
 const APIKEY = process.env.APIKEY;
 
-const supabase = createClient(DBURL, APIKEY);
+const supabaseClient = createClient(DBURL, APIKEY);
 
 // Define la función de carga de imágenes
 window.uploadImg = async function (file) {
-    const { data, error } = await supabase.storage
+    const { data, error } = await supabaseClient.storage
         .from('Digeek2024-comprobantes')
         .upload(file.name, file);
 
