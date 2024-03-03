@@ -1,6 +1,14 @@
-const button1 = document.getElementById("button-1");
-const button2 = document.getElementById("button-2");
-const button3 = document.getElementById("button-3");
+const button11 = document.getElementById("button-1-movil-1");
+const button21 = document.getElementById("button-2-movil-1");
+const button31 = document.getElementById("button-3-movil-1");
+
+const button12 = document.getElementById("button-1-movil-2");
+const button22 = document.getElementById("button-2-movil-2");
+const button32 = document.getElementById("button-3-movil-2");
+
+const button13 = document.getElementById("button-1-movil-3");
+const button23 = document.getElementById("button-2-movil-3");
+const button33 = document.getElementById("button-3-movil-3");
 
 
 const button1lg = document.getElementById("button-1-lg");
@@ -21,66 +29,88 @@ const contentPage3Lg = document.getElementById("page-3-lg");
 
 
 
-button1.addEventListener("click", (e) => {
-    button1.classList.remove("opacity-25");
-    button2.classList.add("opacity-25");
-    button3.classList.add("opacity-25");
 
-    for (let i = 0; i < contentPage1.length; i++) {
-        contentPage1[i].classList.remove("hidden");
+const scrollToSection = (sectionNumber) => {
+    var section = document.getElementById('page-movil-' + sectionNumber);
+    
+    section.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "start"
+
+    })
+}
+
+const buttonAction = (buttonid) => {
+    if(buttonid==1){
+
+        scrollToSection(1)
+
+        button11.classList.remove("bg-zinc-700");
+        button11.classList.add("bg-white");
+        button12.classList.remove("bg-zinc-700");
+        button12.classList.add("bg-white");
+        button13.classList.remove("bg-zinc-700");
+        button13.classList.add("bg-white");
+
+        button21.classList.add("bg-zinc-700");
+        button22.classList.add("bg-zinc-700");
+        button23.classList.add("bg-zinc-700");
+
+        button31.classList.add("bg-zinc-700");
+        button32.classList.add("bg-zinc-700");
+        button33.classList.add("bg-zinc-700");
+    } else if(buttonid == 2) {
+
+        scrollToSection(2)
+
+        button11.classList.add("bg-zinc-700");
+        button12.classList.add("bg-zinc-700");
+        button13.classList.add("bg-zinc-700");
+
+        button21.classList.remove("bg-zinc-700");
+        button21.classList.add("bg-white")
+        button22.classList.remove("bg-zinc-700");
+        button22.classList.add("bg-white")
+        button23.classList.remove("bg-zinc-700");
+        button23.classList.add("bg-white")
+
+        button31.classList.add("bg-zinc-700");
+        button32.classList.add("bg-zinc-700");
+        button33.classList.add("bg-zinc-700");
+    } else if(buttonid == 3) {
+
+        scrollToSection(3)
+
+        button11.classList.add("bg-zinc-700");
+        button12.classList.add("bg-zinc-700");
+        button13.classList.add("bg-zinc-700");
+
+        button21.classList.add("bg-zinc-700");
+        button22.classList.add("bg-zinc-700");
+        button23.classList.add("bg-zinc-700");
+
+        button31.classList.remove("bg-zinc-700");
+        button31.classList.add("bg-white");
+        button32.classList.remove("bg-zinc-700");
+        button32.classList.add("bg-white");
+        button33.classList.remove("bg-zinc-700");
+        button33.classList.add("bg-white");
     }
-
-    for (let i = 0; i < contentPage2.length; i++) {
-        contentPage2[i].classList.add("hidden");
-    }
-
-    for (let i = 0; i < contentPage3.length; i++) {
-        contentPage3[i].classList.add("hidden");
-    }
-
-})
-
-button2.addEventListener("click", (e) => {
-    button1.classList.add("opacity-25");
-    button2.classList.remove("opacity-25");
-    button3.classList.add("opacity-25");
+}
 
 
+button11.addEventListener("click", (e) => buttonAction(1))
+button12.addEventListener("click", (e) => buttonAction(1))
+button13.addEventListener("click", (e) => buttonAction(1))
 
-    for (let i = 0; i < contentPage1.length; i++) {
-        contentPage1[i].classList.add("hidden");
-    }
+button21.addEventListener("click", (e) => buttonAction(2))
+button22.addEventListener("click", (e) => buttonAction(2))
+button23.addEventListener("click", (e) => buttonAction(2))
 
-    for (let i = 0; i < contentPage2.length; i++) {
-        contentPage2[i].classList.remove("hidden");
-    }
-
-    for (let i = 0; i < contentPage3.length; i++) {
-        contentPage3[i].classList.add("hidden");
-    }
-
-
-})
-
-button3.addEventListener("click", (e) => {
-    button1.classList.add("opacity-25");
-    button2.classList.add("opacity-25");
-    button3.classList.remove("opacity-25");
-
-    for (let i = 0; i < contentPage1.length; i++) {
-        contentPage1[i].classList.add("hidden");
-    }
-
-    for (let i = 0; i < contentPage2.length; i++) {
-        contentPage2[i].classList.add("hidden");
-    }
-
-    for (let i = 0; i < contentPage3.length; i++) {
-        contentPage3[i].classList.remove("hidden");
-    }
-
-
-})
+button31.addEventListener("click", (e) => buttonAction(3))
+button32.addEventListener("click", (e) => buttonAction(3))
+button33.addEventListener("click", (e) => buttonAction(3))
 
 
 
@@ -89,7 +119,7 @@ button1lg.addEventListener("click", () => {
 });
 
 button2lg.addEventListener("click", () => {
-    contentPage2Lg.scrollIntoView({ behavior: "smooth", block: "center" });
+    contentPage2Lg.scrollIntoView({ behavior: "smooth", block: "center"});
 });
 
 button3lg.addEventListener("click", () => {
