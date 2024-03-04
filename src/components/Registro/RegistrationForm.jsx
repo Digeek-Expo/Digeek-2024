@@ -1,16 +1,52 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
+import { supabaseClient } from "../../uploadImg";
 
 
 
 const RegistrationForm = () => {
   const [image, setImage] = useState(null);
 
-  const onImageChange = (event, values) => {
+  const onImageChange = async (event, values) => {
     if (event.target.files && event.target.files[0]) {
-      values.imagen = URL.createObjectURL(event.target.files[0]);
-      setImage(URL.createObjectURL(event.target.files[0]));
+      const file = event.target.files[0];
+  
+      try {
+        // Cargar la imagen al bucket de Supabase
+        const { data, error } = await supabaseClient
+          .storage
+          .from('Digeek2024-comprobantes')
+          .upload(file.name, file);
+  
+        console.log('Respuesta de carga de imágenes:', data);
+  
+        if (error) {
+          console.error('Error en la carga de imágenes:', error);
+        } else if (data && data.path) {
+          // Obtener la URL pública utilizando getPublicUrl
+          const { data: publicUrlData, error: publicUrlError } = await supabaseClient
+            .storage
+            .from('Digeek2024-comprobantes')
+            .getPublicUrl(data.path);
+  
+          console.log('Respuesta de getPublicUrl:', publicUrlData);
+  
+          if (publicUrlError) {
+            console.error('Error al obtener la URL pública:', publicUrlError);
+          } else if (publicUrlData && publicUrlData.publicUrl) {
+            // Almacenar la URL de la imagen en el campo comprobante
+            values.comprobante = publicUrlData.publicUrl;
+            setImage(publicUrlData.publicUrl);
+          } else {
+            console.error('La respuesta de getPublicUrl no contiene una propiedad válida para la URL pública:', publicUrlData);
+          }
+        } else {
+          console.error('La respuesta de carga de imagen no contiene la propiedad path:', data);
+        }
+      } catch (error) {
+        console.error('Error al cargar la imagen al bucket:', error);
+      }
     }
   };
 
@@ -25,14 +61,14 @@ const RegistrationForm = () => {
       .max(50, "Muy Largo")
       .required("Obligatorio"),
     terminos: Yup.boolean().oneOf([true], "Debes aceptar los términos"),
-    imagen: Yup.mixed().required("Obligatorio"),
+    comprobante: Yup.mixed().required("Obligatorio"),
   });
 
   const insertarDatosEnBD = async (datos) => {
     try {
       const { data, error } = await supabaseClient
         .from('users')
-        .upsert([datos]);
+        .insert([datos]);
       if (error) {
         console.error(error);
       } else {
@@ -42,6 +78,7 @@ const RegistrationForm = () => {
       console.error('Error al insertar en la base de datos:', error);
     }
   };
+  
 
   return (
     <div className="flex flex-col items-center md:items-end md:w-1/3 w-4/5">
@@ -51,22 +88,22 @@ const RegistrationForm = () => {
           nombre: "",
           correo: "",
           escuela: "",
-          terminos: false,
-          imagen: null,
+          comprobante: null,
         }}
         validationSchema={registroSchema}
-      onSubmit={(values, { setSubmitting }) => {
-        if (values.nombre && values.correo && values.escuela && values.terminos && values.imagen) {
-          insertarDatosEnBD(values);
-          setTimeout(() => {
-            alert(JSON.stringify({ ...values }, null, 2));
+        onSubmit={(values, { setSubmitting }) => {
+          if (values.nombre && values.correo && values.escuela && values.comprobante) {
+            const { terminos, ...datosSinTerminos } = values;
+            insertarDatosEnBD(datosSinTerminos);
+            setTimeout(() => {
+              alert(JSON.stringify({ ...values }, null, 2));
+              setSubmitting(false);
+            }, 400);
+          } else {
+            alert('Por favor, completa todos los campos antes de enviar el formulario.');
             setSubmitting(false);
-          }, 400);
-        } else {
-          alert('Por favor, completa todos los campos antes de enviar el formulario.');
-          setSubmitting(false);
-        }
-      }}
+          }
+        }}
       >
         {({ isSubmitting, errors, values }) => (
           <Form className="flex flex-col gap-8 w-full items-end font-thin mt-10">
