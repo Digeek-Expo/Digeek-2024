@@ -3,51 +3,88 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Digeek 2024">
-  <main class=" bg-[#141414] w-full h-screen py-24 px-64 text-white">
+  <main class="bg-[#141414] w-full h-screen py-12 px-20 sm:py-20 sm:px-44 lg:py-24 lg:px-64 xl:px-64 text-white">
     <section class=" border-b-2" id="section1">
       <button type="button" class="focus:outline-none flex flex-row pt-5 pb-3 items-center cursor-pointer w-full justify-between">
-        <label class=" cursor-pointer block relative text-4xl font-semibold">¿Cuándo es Digeek?</label>
+        <label class="text-left cursor-pointer block relative text-2xl sm:text-3xl lg:text-4xl xl:text-4xl font-semibold">¿Cuándo es Digeek?</label>
         <img src="../../public/down-arrow.png" class="flex w-9 h-9 mt-2"/>
       </button>
       <div class="answer overflow-hidden transition-max-height pb-3">
-        <p class="text-2xl">no se</p>
+        <p class="text-lg sm:text-xl lg:text-2xl xl:text-2xl">14 y 15 de Marzo.</p>
       </div>
     </section>
     <section class=" border-b-2" id="section2">
       <button type="button" class="focus:outline-none flex flex-row pt-5 pb-3 items-center cursor-pointer w-full justify-between">
-        <label class=" cursor-pointer block relative text-4xl font-semibold">¿Cómo me registro?</label>
+        <label class="text-left cursor-pointer block relative text-2xl sm:text-3xl lg:text-4xl xl:text-4xl font-semibold">¿Cómo me registro?</label>
         <img src="../../public/down-arrow.png" class="flex w-9 h-9 mt-2"/>
       </button>
       <div class="answer overflow-hidden transition-max-height pb-3">
-        <p class="text-2xl">no se</p>
+        <p class="text-lg sm:text-xl lg:text-2xl xl:text-2xl">En la opción de registro en el menú de esta página.</p>
       </div>
     </section>
     <section class=" border-b-2" id="section3">
       <button type="button" class="focus:outline-none flex flex-row pt-5 pb-3 items-center cursor-pointer w-full justify-between">
-        <label class=" cursor-pointer block relative text-4xl font-semibold">¿Cuáles son las etapas del evento?</label>
+        <label class="text-left cursor-pointer block relative text-2xl sm:text-3xl lg:text-4xl xl:text-4xl font-semibold">¿Cuáles son las etapas del evento?</label>
         <img src="../../public/down-arrow.png" class="flex w-9 h-9 mt-2"/>
       </button>
       <div class="answer overflow-hidden transition-max-height pb-3">
-        <p class="text-2xl">no se</p>
+        <p class="text-lg sm:text-xl lg:text-2xl xl:text-2xl">no se</p>
       </div>
     </section>
     <section class=" border-b-2" id="section4">
       <button type="button" class="focus:outline-none flex flex-row pt-5 pb-3 items-center cursor-pointer w-full justify-between">
-        <label class=" cursor-pointer block relative text-4xl font-semibold">¿Dónde es Digeek?</label>
+        <label class="text-left cursor-pointer block relative text-2xl sm:text-3xl lg:text-4xl xl:text-4xl font-semibold">¿Dónde es Digeek?</label>
         <img src="../../public/down-arrow.png" class="flex w-9 h-9 mt-2"/>
       </button>
       <div class="answer overflow-hidden transition-max-height pb-3">
-        <p class="text-2xl">no se</p>
+        <p class="text-lg sm:text-xl lg:text-2xl xl:text-2xl">En el Gimnasio Quimical de CETYS Campus Ensenada.</p>
       </div>
     </section>
 
     <style>
       .answer {
         max-height: 0;
+        overflow: hidden;
       }
 
       .transition-max-height {
         transition: max-height 0.8s ease;
+      }
+
+      @media screen and (max-width: 640px) {
+        .py-12 {
+          padding-top: 48px;
+          padding-bottom: 48px;
+        }
+
+        .px-20 {
+          padding-left: 80px;
+          padding-right: 80px;
+        }
+      }
+
+      @media screen and (min-width: 641px) and (max-width: 1024px) {
+        .py-32 {
+          padding-top: 32px;
+          padding-bottom: 32px;
+        }
+
+        .px-52 {
+          padding-left: 52px;
+          padding-right: 52px;
+        }
+      }
+
+      @media screen and (min-width: 1025px) {
+        .py-24 {
+          padding-top: 24px;
+          padding-bottom: 24px;
+        }
+
+        .px-64 {
+          padding-left: 64px;
+          padding-right: 64px;
+        }
       }
     </style>
     <script>
@@ -55,7 +92,7 @@ import Layout from "../layouts/Layout.astro";
 
 sections.forEach(section => {
   const button = section.querySelector('button');
-  const answer = section.querySelector('.answer') as HTMLElement; // Utilizar HTMLElement
+  const answer = section.querySelector('.answer') as HTMLElement;
 
   if (button && answer) {
     button.addEventListener('click', () => {
