@@ -11,6 +11,19 @@ const button23 = document.getElementById("button-2-movil-3");
 const button33 = document.getElementById("button-3-movil-3");
 
 
+const buttonT11 = document.getElementById("button-1-tablet-1");
+const buttonT21 = document.getElementById("button-2-tablet-1");
+const buttonT31 = document.getElementById("button-3-tablet-1");
+
+const buttonT12 = document.getElementById("button-1-tablet-2");
+const buttonT22 = document.getElementById("button-2-tablet-2");
+const buttonT32 = document.getElementById("button-3-tablet-2");
+
+const buttonT13 = document.getElementById("button-1-tablet-3");
+const buttonT23 = document.getElementById("button-2-tablet-3");
+const buttonT33 = document.getElementById("button-3-tablet-3");
+
+
 const button1lg = document.getElementById("button-1-lg");
 const button2lg = document.getElementById("button-2-lg");
 const button3lg = document.getElementById("button-3-lg");
@@ -27,11 +40,26 @@ const contentPage1Lg = document.getElementById("page-1-lg");
 const contentPage2Lg = document.getElementById("page-2-lg")
 const contentPage3Lg = document.getElementById("page-3-lg");
 
+const contentPage1T = document.getElementById("page-tablet-1");
+const contentPage2T = document.getElementById("page-tablet-2")
+const contentPage3T = document.getElementById("page-tablet-3");
+
 
 
 
 const scrollToSection = (sectionNumber) => {
     var section = document.getElementById('page-movil-' + sectionNumber);
+    
+    section.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "start"
+
+    })
+}
+
+const scrollToSectionTablet = (sectionNumber) => {
+    var section = document.getElementById('page-tablet-' + sectionNumber);
     
     section.scrollIntoView({
         behavior: "smooth",
@@ -125,6 +153,82 @@ button2lg.addEventListener("click", () => {
 button3lg.addEventListener("click", () => {
     contentPage3Lg.scrollIntoView({ behavior: "smooth", block: "center" });
 });
+
+
+
+
+const buttonActionT = (buttonid) => {
+    if(buttonid==1){
+
+        scrollToSectionTablet(1)
+
+        buttonT11.classList.remove("bg-zinc-700");
+        buttonT11.classList.add("bg-white");
+        buttonT12.classList.remove("bg-zinc-700");
+        buttonT12.classList.add("bg-white");
+        buttonT13.classList.remove("bg-zinc-700");
+        buttonT13.classList.add("bg-white");
+
+        buttonT21.classList.add("bg-zinc-700");
+        buttonT22.classList.add("bg-zinc-700");
+        buttonT23.classList.add("bg-zinc-700");
+
+        buttonT31.classList.add("bg-zinc-700");
+        buttonT32.classList.add("bg-zinc-700");
+        buttonT33.classList.add("bg-zinc-700");
+    } else if(buttonid == 2) {
+
+        scrollToSectionTablet(2)
+
+        buttonT11.classList.add("bg-zinc-700");
+        buttonT12.classList.add("bg-zinc-700");
+        buttonT13.classList.add("bg-zinc-700");
+
+        buttonT21.classList.remove("bg-zinc-700");
+        buttonT21.classList.add("bg-white")
+        buttonT22.classList.remove("bg-zinc-700");
+        buttonT22.classList.add("bg-white")
+        buttonT23.classList.remove("bg-zinc-700");
+        buttonT23.classList.add("bg-white")
+
+        buttonT31.classList.add("bg-zinc-700");
+        buttonT32.classList.add("bg-zinc-700");
+        buttonT33.classList.add("bg-zinc-700");
+    } else if(buttonid == 3) {
+
+        scrollToSectionTablet(3)
+
+        buttonT11.classList.add("bg-zinc-700");
+        buttonT12.classList.add("bg-zinc-700");
+        buttonT13.classList.add("bg-zinc-700");
+
+        buttonT21.classList.add("bg-zinc-700");
+        buttonT22.classList.add("bg-zinc-700");
+        buttonT23.classList.add("bg-zinc-700");
+
+        buttonT31.classList.remove("bg-zinc-700");
+        buttonT31.classList.add("bg-white");
+        buttonT32.classList.remove("bg-zinc-700");
+        buttonT32.classList.add("bg-white");
+        buttonT33.classList.remove("bg-zinc-700");
+        buttonT33.classList.add("bg-white");
+    }
+}
+
+
+buttonT11.addEventListener("click", (e) => buttonActionT(1))
+buttonT12.addEventListener("click", (e) => buttonActionT(1))
+buttonT13.addEventListener("click", (e) => buttonActionT(1))
+
+buttonT21.addEventListener("click", (e) => buttonActionT(2))
+buttonT22.addEventListener("click", (e) => buttonActionT(2))
+buttonT23.addEventListener("click", (e) => buttonActionT(2))
+
+buttonT31.addEventListener("click", (e) => buttonActionT(3))
+buttonT32.addEventListener("click", (e) => buttonActionT(3))
+buttonT33.addEventListener("click", (e) => buttonActionT(3))
+
+
 
 
 
