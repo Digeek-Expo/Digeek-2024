@@ -1,7 +1,194 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Event from "../components/webinars/Event.astro";
+import Day from "../components/webinars/Day.astro";
 ---
 
 <Layout title="Digeek 2024">
-  <main>webinars</main>
+  <main class="w-auto h-auto bg-[#121212] pb-[50vh] pt-[100px] z-0">
+    <div
+      class="flex flex-col items-center justify-center z-0 md:max-lg:flex-row md:max-lg:ml-20 md:max-lg:items-start lg:ml-40 xl:ml-40 lg:items-start xl:flex-row xl:space-x-2 lg:justify-start"
+    >
+      <Day name="Marzo 14">
+        <Event
+          name="Registro"
+          time="8:00 AM - 9:00 AM"
+          description="Registro en el gimnasio de CETYS"
+          isOdd={false}
+        />
+        <Event
+          name="Por definir"
+          time="9:00 AM - 10:00 AM"
+          description="Por definir"
+          isOdd={true}
+        />
+        <Event
+          name="Nuevas tecnologias AI"
+          time="10:00 AM - 11:00 AM"
+          description="Samsung STR. Por Miguel Gonzalez. ISW | IDGD"
+          isOdd={false}
+        />
+        <Event
+          name="Algoritmos, importancia, consejos y técnicas para resolverlos"
+          time="11:00 AM - 12:00 PM"
+          description="Samsung STR. Por Rafael Corona. ISW"
+          isOdd={true}
+        />
+        <Event
+          name="Interview, tips and hacks"
+          time="12:00 PM - 1:00 PM"
+          description="Samsung STR. Por Iván Martinez. ISW | IDGD"
+          isOdd={false}
+        />
+        <Event
+          name="Departamento de Diseño"
+          time="1:00 PM - 2:00 PM"
+          description="Samsung STR. Por Luis Pardo. IDGD"
+          isOdd={true}
+        />
+        <Event
+          name="Representantes STR"
+          time="2:00 PM - 3:00 PM"
+          description="Samsung STR. Por Jonathan corona. ISW | IDGD"
+          isOdd={false}
+        />
+        <Event
+          name="Comida"
+          time="3:00 PM - 4:00 PM"
+          description="Comida"
+          isOdd={true}
+        />
+        <Event
+          name="Taller fotografia"
+          time="4:00 PM - 5:00 PM"
+          description="Por Diego Covarrubias"
+          isOdd={false}
+        />
+        <Event
+          name="Taller UI/UX Design thinking"
+          time="5:00 PM - 6:00 PM"
+          description="Por Roberto Calderon. IDGD"
+          isOdd={true}
+        />
+        <Event
+          name="Taller Gear Parte 1"
+          time="5:00 PM - 6:00 PM"
+          description="ISW"
+          isOdd={false}
+        />
+      </Day>
+
+      <Day name="Marzo 15">
+        <Event
+          name="Registro"
+          time="8:00 AM - 9:00 AM"
+          description="Registro en el gimnasio de CETYS"
+          isOdd={false}
+        />
+        <Event
+          name="Por definir"
+          time="9:00 AM - 10:00 AM"
+          description="Por definir"
+          isOdd={true}
+        />
+        <Event
+          name="QA en la industria del software"
+          time="10:00 AM - 11:00 AM"
+          description="Conferencia por Dilato. ISW"
+          isOdd={false}
+        />
+        <Event
+          name="Accenture - One of the best places to work"
+          time="11:00 AM - 12:00 PM"
+          description="Accenture"
+          isOdd={true}
+        />
+        <Event
+          name="Oportunidaes para desarrolladores en Web3"
+          time="12:00 PM - 1:00 PM"
+          description="Conferencia por Vara Network. ISW"
+          isOdd={false}
+        />
+        <Event
+          name="Nadia"
+          time="1:00 PM - 2:00 PM"
+          description="Evento por definir."
+          isOdd={true}
+        />
+        <Event
+          name="Monste"
+          time="2:00 PM - 3:00 PM"
+          description="Evento por definir."
+          isOdd={false}
+        />
+        <Event
+          name="Comida"
+          time="3:00 PM - 4:00 PM"
+          description="Comida"
+          isOdd={true}
+        />
+        <Event
+          name="Taller VFX"
+          time="4:00 PM - 5:00 PM"
+          description="Taller por Carina Garcia Rosas. IDGD"
+          isOdd={false}
+        />
+        <Event
+          name="Ilustración digital"
+          time="5:00 PM - 6:00 PM"
+          description="Por Montse. IDGD"
+          isOdd={true}
+        />
+        <Event
+          name="Tamagotchi battle"
+          time="5:00 PM - 6:00 PM"
+          description="Vara Network"
+          isOdd={false}
+        />
+      </Day>
+    </div>
+
+    <div id="info-container" class="h-fit flex justify-between">
+      <div
+        class="min-w-[100vw] h-fit flex justify-between flex-col items-center fixed bottom-0 left-0 lg:top-60 lg:right-0 lg:justify-end lg:items-end lg:w-auto pointer-events-none"
+      >
+        <div
+          class="bg-[#7678FF] w-full max-w-[30rem] h-[50%] rounded-t-[30px] p-5 sm:w-[30rem] lg:rounded-r-[0px] lg:rounded-l-[30px] pointer-events-auto"
+        >
+          <span
+            id="container-event-title"
+            class="event-title text-4xl text-white font-semibold">Registro</span
+          >
+
+          <div class="flex flex-row items-center">
+            <img src="./calendarWhite.png" class="w-10 h-10" />
+            <span id="container-day-title" class="text-xl text-white pl-4"
+              >Marzo 14</span
+            >
+            <span class="text-xl text-white pl-4"> |</span>
+            <span id="container-event-time" class="text-xl text-white pl-4"
+              >8:00 AM - 9:00 AM</span
+            >
+          </div>
+
+          <div class="w-full mt-2 md:flex md:flex-col">
+            <h3
+              id="container-event-description"
+              class="text-white text-base pb-10"
+            >
+              Registro en el gimnasio de CETYS.
+            </h3>
+            <img
+              id="container-event-img"
+              class="hidden w-10 h-10 md:w-20 md:h-20"
+              src=""
+              alt="event image"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 </Layout>
+
+<script src="../js/eventOnClick.js"></script>
