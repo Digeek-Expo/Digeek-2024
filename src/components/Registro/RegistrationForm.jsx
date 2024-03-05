@@ -9,6 +9,10 @@ const RegistrationForm = () => {
   const onImageChange = async (event, values) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
+      if (!file.type.startsWith("image/")) {
+        alert("Please select an image file.");
+        return; // Stop processing if not an image
+      }
       setImage(URL.createObjectURL(file));
       values.comprobante = file;
     }
