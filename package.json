@@ -14,7 +14,6 @@
     "@astrojs/react": "^3.0.10",
     "@astrojs/tailwind": "^5.1.0",
     "@supabase/supabase-js": "^2.39.7",
-    "astro": "^4.4.3",
     "dotenv": "^16.4.5",
     "@types/react": "^18.2.60",
     "@types/react-dom": "^18.2.19",

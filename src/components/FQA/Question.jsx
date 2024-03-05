@@ -14,7 +14,7 @@ const Question = ({ question, answer }) => {
           {question}
         </label>
         <img
-          src="../../public/down-arrow.png"
+          src="/down-arrow.png"
           class={
             `flex w-9 h-9 duration-200 ` +
             (showAnswer ? "rotate-[-180deg] " : "")
