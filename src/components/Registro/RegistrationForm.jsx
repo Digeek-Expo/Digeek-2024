@@ -1,14 +1,16 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
+import uploadRowToDB from "../../services/supabase";
 
 const RegistrationForm = () => {
   const [image, setImage] = useState(null);
 
-  const onImageChange = (event, values) => {
+  const onImageChange = async (event, values) => {
     if (event.target.files && event.target.files[0]) {
-      values.imagen = URL.createObjectURL(event.target.files[0]);
-      setImage(URL.createObjectURL(event.target.files[0]));
+      const file = event.target.files[0];
+      setImage(URL.createObjectURL(file));
+      values.comprobante = file;
     }
   };
 
@@ -23,7 +25,7 @@ const RegistrationForm = () => {
       .max(50, "Muy Largo")
       .required("Obligatorio"),
     terminos: Yup.boolean().oneOf([true], "Debes aceptar los términos"),
-    imagen: Yup.mixed().required("Obligatorio"),
+    comprobante: Yup.mixed().required("Obligatorio"),
   });
 
   return (
@@ -34,15 +36,26 @@ const RegistrationForm = () => {
           nombre: "",
           correo: "",
           escuela: "",
-          terminos: false,
-          imagen: null,
+          comprobante: null,
         }}
         validationSchema={registroSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            alert(JSON.stringify({ ...values }, null, 2));
-            setSubmitting(false);
-          }, 400);
+        onSubmit={async (values, { setSubmitting, resetForm }) => {
+          if (
+            values.nombre &&
+            values.correo &&
+            values.escuela &&
+            values.comprobante
+          ) {
+            const { terminos, ...datosSinTerminos } = values;
+            await uploadRowToDB(datosSinTerminos);
+            resetForm();
+            setImage(null);
+          } else {
+            alert(
+              "Por favor, completa todos los campos antes de enviar el formulario."
+            );
+          }
+          setSubmitting(false);
         }}
       >
         {({ isSubmitting, errors, values }) => (
