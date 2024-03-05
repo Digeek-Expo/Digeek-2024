@@ -1,9 +1,7 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
-import { supabaseClient } from "../../uploadImg";
-
-
+import uploadRowToDB from "../../services/supabase";
 
 const RegistrationForm = () => {
   const [image, setImage] = useState(null);
@@ -11,42 +9,8 @@ const RegistrationForm = () => {
   const onImageChange = async (event, values) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
-  
-      try {
-        // Cargar la imagen al bucket de Supabase
-        const { data, error } = await supabaseClient
-          .storage
-          .from('Digeek2024-comprobantes')
-          .upload(file.name, file);
-  
-        console.log('Respuesta de carga de imágenes:', data);
-  
-        if (error) {
-          console.error('Error en la carga de imágenes:', error);
-        } else if (data && data.path) {
-          // Obtener la URL pública utilizando getPublicUrl
-          const { data: publicUrlData, error: publicUrlError } = await supabaseClient
-            .storage
-            .from('Digeek2024-comprobantes')
-            .getPublicUrl(data.path);
-  
-          console.log('Respuesta de getPublicUrl:', publicUrlData);
-  
-          if (publicUrlError) {
-            console.error('Error al obtener la URL pública:', publicUrlError);
-          } else if (publicUrlData && publicUrlData.publicUrl) {
-            // Almacenar la URL de la imagen en el campo comprobante
-            values.comprobante = publicUrlData.publicUrl;
-            setImage(publicUrlData.publicUrl);
-          } else {
-            console.error('La respuesta de getPublicUrl no contiene una propiedad válida para la URL pública:', publicUrlData);
-          }
-        } else {
-          console.error('La respuesta de carga de imagen no contiene la propiedad path:', data);
-        }
-      } catch (error) {
-        console.error('Error al cargar la imagen al bucket:', error);
-      }
+      setImage(URL.createObjectURL(file));
+      values.comprobante = file;
     }
   };
 
@@ -64,22 +28,6 @@ const RegistrationForm = () => {
     comprobante: Yup.mixed().required("Obligatorio"),
   });
 
-  const insertarDatosEnBD = async (datos) => {
-    try {
-      const { data, error } = await supabaseClient
-        .from('users')
-        .insert([datos]);
-      if (error) {
-        console.error(error);
-      } else {
-        console.log('Datos enviados correctamente:', data);
-      }
-    } catch (error) {
-      console.error('Error al insertar en la base de datos:', error);
-    }
-  };
-  
-
   return (
     <div className="flex flex-col items-center md:items-end md:w-1/3 w-4/5">
       <h1 className="text-4xl text-[#7678FF] font-bold">Registro</h1>
@@ -91,18 +39,23 @@ const RegistrationForm = () => {
           comprobante: null,
         }}
         validationSchema={registroSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          if (values.nombre && values.correo && values.escuela && values.comprobante) {
+        onSubmit={async (values, { setSubmitting, resetForm }) => {
+          if (
+            values.nombre &&
+            values.correo &&
+            values.escuela &&
+            values.comprobante
+          ) {
             const { terminos, ...datosSinTerminos } = values;
-            insertarDatosEnBD(datosSinTerminos);
-            setTimeout(() => {
-              alert(JSON.stringify({ ...values }, null, 2));
-              setSubmitting(false);
-            }, 400);
+            await uploadRowToDB(datosSinTerminos);
+            resetForm();
+            setImage(null);
           } else {
-            alert('Por favor, completa todos los campos antes de enviar el formulario.');
-            setSubmitting(false);
+            alert(
+              "Por favor, completa todos los campos antes de enviar el formulario."
+            );
           }
+          setSubmitting(false);
         }}
       >
         {({ isSubmitting, errors, values }) => (
