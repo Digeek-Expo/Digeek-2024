@@ -31,7 +31,7 @@ const MobilNavigationPage = ({ setOpen }) => {
   };
 
   return (
-    <div className="fixed right-0 top-0 w-[100vw] flex z-10 ">
+    <div className="fixed right-0 top-0 w-[100vw] flex z-[1000] ">
       <div
         className="cosa h-screen w-[30vw] bg-black bg-opacity-20 animate-menuAnimationIn"
         onClick={handleCloseNavigation}
