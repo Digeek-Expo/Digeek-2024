@@ -5,9 +5,9 @@ import Day from "../components/webinars/Day.astro";
 ---
 
 <Layout title="Digeek 2024">
-  <main class="w-auto h-auto bg-[#121212] pb-[50vh] pt-[100px] z-0">
+  <main class="w-auto h-auto bg-[#121212] pb-[30vh] md:w-5vh xl:pb-20 pt-[100px] z-0">
     <div
-      class="flex flex-col items-center justify-center z-0 md:max-lg:flex-row md:max-lg:ml-20 md:max-lg:items-start lg:ml-40 xl:ml-40 lg:items-start xl:flex-row xl:space-x-2 lg:justify-start"
+      class="flex flex-col items-center justify-center z-0 md:max-xl:flex-row md:max-xl:ml-20 md:max-xl:items-start    xl:ml-40 xl:items-start xl:flex-row xl:space-x-2 xl:justify-start"
     >
       <Day name="Marzo 14">
         <Event
@@ -150,23 +150,23 @@ import Day from "../components/webinars/Day.astro";
 
     <div id="info-container" class="h-fit flex justify-between">
       <div
-        class="min-w-[100vw] h-fit flex justify-between flex-col items-center fixed bottom-0 left-0 lg:top-60 lg:right-0 lg:justify-end lg:items-end lg:w-auto pointer-events-none"
+        class="min-w-[100vw] h-fit flex justify-between flex-col items-center fixed bottom-0 left-0 xl:top-60 xl:right-0 xl:justify-end xl:items-end xl:w-auto pointer-events-none"
       >
         <div
-          class="bg-[#7678FF] w-full max-w-[30rem] h-[50%] rounded-t-[30px] p-5 sm:w-[30rem] lg:rounded-r-[0px] lg:rounded-l-[30px] pointer-events-auto"
+          class="bg-[#7678FF] w-full max-w-[30rem] h-[50%] rounded-t-[30px] p-5 sm:w-[30rem] xl:rounded-r-[0px] xl:rounded-l-[30px] pointer-events-auto"
         >
           <span
             id="container-event-title"
-            class="event-title text-4xl text-white font-semibold">Registro</span
+            class="event-title text-2xl xl:text-4xl text-white font-semibold">Registro</span
           >
 
           <div class="flex flex-row items-center">
-            <img src="./calendarWhite.png" class="w-10 h-10" />
-            <span id="container-day-title" class="text-xl text-white pl-4"
+            <img src="./calendarWhite.png" class=" w-7 h-7 xl:w-10 xl:h-10" />
+            <span id="container-day-title" class=" text-sm xl:text-xl text-white pl-2"
               >Marzo 14</span
             >
-            <span class="text-xl text-white pl-4"> |</span>
-            <span id="container-event-time" class="text-xl text-white pl-4"
+            <span class="text-xl text-white pl-2"> |</span>
+            <span id="container-event-time" class=" text-sm xl:text-xl text-white pl-2"
               >8:00 AM - 9:00 AM</span
             >
           </div>
