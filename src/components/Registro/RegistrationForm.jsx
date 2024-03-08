@@ -1,54 +1,25 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import React from "react";
 import * as Yup from "yup";
-import { supabaseClient } from "../../uploadImg";
 
 
+import { createClient } from '@supabase/supabase-js';
+
+const DBURL = import.meta.env.PUBLIC_DBURL;
+const APIKEY = import.meta.env.PUBLIC_APIKEY;
+
+export const supabaseClient = createClient(DBURL, APIKEY);
 
 const RegistrationForm = () => {
-  const [image, setImage] = useState(null);
-
-  const onImageChange = async (event, values) => {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-  
-      try {
-        // Cargar la imagen al bucket de Supabase
-        const { data, error } = await supabaseClient
-          .storage
-          .from('Digeek2024-comprobantes')
-          .upload(file.name, file);
-  
-        console.log('Respuesta de carga de imágenes:', data);
-  
-        if (error) {
-          console.error('Error en la carga de imágenes:', error);
-        } else if (data && data.path) {
-          // Obtener la URL pública utilizando getPublicUrl
-          const { data: publicUrlData, error: publicUrlError } = await supabaseClient
-            .storage
-            .from('Digeek2024-comprobantes')
-            .getPublicUrl(data.path);
-  
-          console.log('Respuesta de getPublicUrl:', publicUrlData);
-  
-          if (publicUrlError) {
-            console.error('Error al obtener la URL pública:', publicUrlError);
-          } else if (publicUrlData && publicUrlData.publicUrl) {
-            // Almacenar la URL de la imagen en el campo comprobante
-            values.comprobante = publicUrlData.publicUrl;
-            setImage(publicUrlData.publicUrl);
-          } else {
-            console.error('La respuesta de getPublicUrl no contiene una propiedad válida para la URL pública:', publicUrlData);
-          }
-        } else {
-          console.error('La respuesta de carga de imagen no contiene la propiedad path:', data);
-        }
-      } catch (error) {
-        console.error('Error al cargar la imagen al bucket:', error);
-      }
-    }
-  };
+  const [position, setPosition] = React.useState("bottom")
 
   const registroSchema = Yup.object().shape({
     nombre: Yup.string()
@@ -61,7 +32,6 @@ const RegistrationForm = () => {
       .max(50, "Muy Largo")
       .required("Obligatorio"),
     terminos: Yup.boolean().oneOf([true], "Debes aceptar los términos"),
-    comprobante: Yup.mixed().required("Obligatorio"),
   });
 
   const insertarDatosEnBD = async (datos) => {
@@ -88,7 +58,6 @@ const RegistrationForm = () => {
           nombre: "",
           correo: "",
           escuela: "",
-          comprobante: null,
         }}
         validationSchema={registroSchema}
         onSubmit={(values, { setSubmitting }) => {
@@ -133,24 +102,20 @@ const RegistrationForm = () => {
               <ErrorMessage name="escuela" component={ErrorComponent} />
             </div>
             <div className="border-2 border-[#7678FF] relative rounded-sm gap-4 w-full h-[140px] border-dashed flex flex-col justify-center items-center">
-              {image != null ? (
-                <div className="bg-[#7678FF] rounded-full h-28 w-28">
-                  <img src={image} className="w-28 h-28" />
-                </div>
-              ) : (
-                <>
-                  <img src="/uploadImage.png" className="w-10 h-10" />
-                  <h1 className="font-bold text-[#7678FF] text-center">
-                    Sube tu recibo de pago en este apartado
-                  </h1>
-                </>
-              )}
-              <input
-                type="file"
-                className="w-full h-full opacity-0 absolute hover:cursor-pointer"
-                accept="image/png, image/gif, image/jpeg"
-                onChange={(e) => onImageChange(e, values)}
-              />
+            <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline">Open</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56">
+        <DropdownMenuLabel>Panel Position</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
+          <DropdownMenuRadioItem value="top">Top</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="bottom">Bottom</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="right">Right</DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
               <ErrorMessage name="image" component={ErrorComponent} />
             </div>
 
