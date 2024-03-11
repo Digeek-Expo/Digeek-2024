@@ -1,52 +1,22 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import * as Yup from "yup";
-import { Autocomplete, Input, TextField } from "@mui/material";
-import { createClient } from "@supabase/supabase-js";
-
-const DBURL = import.meta.env.PUBLIC_DBURL;
-const APIKEY = import.meta.env.PUBLIC_APIKEY;
-
-export const supabaseClient = createClient(DBURL, APIKEY);
+import uploadRowToDB from "../../services/supabase";
 
 const RegistrationForm = () => {
-  const [talleresOptions, setTalleresOptions] = useState([]);
-  
-  useEffect(() => {
-    const fetchTalleresOptions = async () => {
-      try {
-        const { data: talleresData, error: talleresError } =
-          await supabaseClient
-            .from("workshops")
-            .select("workshop_id, workshop_name, workshop_date, capacity");
+  const [image, setImage] = useState(null);
 
-        if (talleresError) {
-          console.error(
-            "Error al obtener la lista de talleres:",
-            talleresError
-          );
-          return;
-        }
-
-        const talleresOptions = talleresData
-          .filter((taller) => {
-            return taller.capacity > 0;
-          })
-          .map((taller) => ({
-            id: taller.workshop_id,
-            label: `${taller.workshop_name} - ${taller.workshop_date}`,
-            date: taller.workshop_date,
-          }));
-
-        setTalleresOptions(talleresOptions);
-      } catch (error) {
-        console.error("Error en la solicitud de talleres:", error);
+  const onImageChange = async (event, values) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      if (!file.type.startsWith("image/")) {
+        alert("Please select an image file.");
+        return; // Stop processing if not an image
       }
-    };
-
-    fetchTalleresOptions();
-  }, []);
-
+      setImage(URL.createObjectURL(file));
+      values.comprobante = file;
+    }
+  };
 
   const registroSchema = Yup.object().shape({
     nombre: Yup.string()
@@ -59,59 +29,8 @@ const RegistrationForm = () => {
       .max(50, "Muy Largo")
       .required("Obligatorio"),
     terminos: Yup.boolean().oneOf([true], "Debes aceptar los términos"),
-    taller: Yup.object()
-      .required("Selecciona un taller")
-      .shape({
-        id: Yup.number().required("ID del taller es obligatorio"),
-        label: Yup.string().required("Etiqueta del taller es obligatoria"),
-        date: Yup.string().required("Fecha del taller es obligatoria"),
-      }),
+    comprobante: Yup.mixed().required("Obligatorio"),
   });
-
-  const insertarDatosEnBD = async (datos) => {
-    try {
-      const { data: tallerData, error: tallerError } = await supabaseClient
-        .from("workshops")
-        .select("capacity")
-        .eq("workshop_id", datos.taller.id);
-      if (tallerError) {
-        alerta("Error al obtener talleres");
-        return;
-      }
-      if (tallerData[0].capacity == 0) {
-        alert("El taller seleccionado ya no tiene capacidad");
-        return;
-      }
-      if (tallerData[0])
-        if (!tallerError && tallerData[0].capacity > 0) {
-          const { data, error } = await supabaseClient.from("users").insert([
-            {
-              nombre: datos.nombre,
-              correo: datos.correo,
-              escuela: datos.escuela,
-              workshop_id: datos.taller.id,
-            },
-          ]);
-
-          if (error) {
-            console.error(error);
-            return;
-          }
-
-          const capacidadActual = tallerData[0]?.capacity || 0;
-
-          const nuevaCapacidad = Math.max(0, capacidadActual - 1);
-
-          await supabaseClient
-            .from("workshops")
-            .update({ capacity: nuevaCapacidad })
-            .eq("workshop_id", datos.taller.id);
-          alert("Datos enviados correctamente");
-        }
-    } catch (error) {
-      console.error("Error al insertar en la base de datos:", error);
-    }
-  };
 
   return (
     <div className="flex flex-col items-center md:items-end md:w-1/3 w-4/5">
@@ -121,40 +40,29 @@ const RegistrationForm = () => {
           nombre: "",
           correo: "",
           escuela: "",
-          terminos: false,
-          taller: null,
+          comprobante: null,
         }}
         validationSchema={registroSchema}
-        onSubmit={async (values, { setSubmitting }) => {
-          try {
-            if (
-              !(
-                values.nombre &&
-                values.correo &&
-                values.escuela &&
-                values.taller
-              )
-            ) {
-              alert(
-                "Por favor, completa todos los campos antes de enviar el formulario."
-              );
-              setSubmitting(false);
-              return;
-            }
+        onSubmit={async (values, { setSubmitting, resetForm }) => {
+          if (
+            values.nombre &&
+            values.correo &&
+            values.escuela &&
+            values.comprobante
+          ) {
             const { terminos, ...datosSinTerminos } = values;
-
-            await insertarDatosEnBD(datosSinTerminos);
-
-            setSubmitting(false);
-            window.location.href = "/";
-          } catch (error) {
-            console.error("Error al enviar datos a la base de datos:", error);
-            setSubmitting(false);
+            await uploadRowToDB(datosSinTerminos);
+            resetForm();
+            setImage(null);
+          } else {
+            alert(
+              "Por favor, completa todos los campos antes de enviar el formulario."
+            );
           }
           setSubmitting(false);
         }}
       >
-        {({ isSubmitting, errors, values, setFieldValue }) => (
+        {({ isSubmitting, errors, values }) => (
           <Form className="flex flex-col gap-8 w-full items-end font-thin mt-10">
             <div className="w-full relative">
               <Field
@@ -181,25 +89,26 @@ const RegistrationForm = () => {
               />
               <ErrorMessage name="escuela" component={ErrorComponent} />
             </div>
-
-            <div className="w-full relative">
-              <label className="text-[#7678FF] text-sm font-bold capitalize after:content-['*'] after:ml-0.5 after:text-[#FF42BA]">
-                Taller
-              </label>
-              <Autocomplete
-                id="taller"
-                className="w-full border-2 border-[#7678FF] outline-none rounded-sm"
-                options={talleresOptions}
-                getOptionLabel={(option) => option.label || ""}
-                value={values.taller}
-                onChange={(event, newValue) => {
-                  setFieldValue("taller", newValue);
-                }}
-                disableClearable
-                renderInput={(params) => <TextField {...params} />}
+            <div className="border-2 border-[#7678FF] relative rounded-sm gap-4 w-full h-[140px] border-dashed flex flex-col justify-center items-center">
+              {image != null ? (
+                <div className="bg-[#7678FF] rounded-full h-28 w-28">
+                  <img src={image} className="w-28 h-28" />
+                </div>
+              ) : (
+                <>
+                  <img src="/uploadImage.png" className="w-10 h-10" />
+                  <h1 className="font-bold text-[#7678FF] text-center">
+                    Sube tu recibo de pago en este apartado
+                  </h1>
+                </>
+              )}
+              <input
+                type="file"
+                className="w-full h-full opacity-0 absolute hover:cursor-pointer"
+                accept="image/png, image/gif, image/jpeg"
+                onChange={(e) => onImageChange(e, values)}
               />
-
-              <ErrorMessage name="taller" component={ErrorComponent} />
+              <ErrorMessage name="image" component={ErrorComponent} />
             </div>
 
             <div className="flex w-full items-center gap-2">
