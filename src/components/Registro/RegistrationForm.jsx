@@ -182,9 +182,29 @@ const RegistrationForm = () => {
             </div>
 
             <div className="w-full relative">
-              <label className="text-[#7678FF] text-sm font-bold capitalize after:content-['*'] after:ml-0.5 after:text-[#FF42BA]">
+            <label className="text-[#7678FF] text-sm font-bold capitalize after:content-['*'] after:ml-0.5 after:text-[#FF42BA]">
                 Taller
               </label>
+              <select
+                className="w-full border-2 border-[#7678FF] outline-none rounded-sm px-4 py-2"
+                name="taller"
+                value={values.taller ? values.taller.id : ""}
+                onChange={(event) => {
+                  const selectedTaller = talleresOptions.find(
+                    (taller) => taller.id === parseInt(event.target.value)
+                  );
+                  setFieldValue("taller", selectedTaller);
+                }}
+              >
+                <option value="" disabled>
+                  Selecciona un taller
+                </option>
+                {talleresOptions.map((taller) => (
+                  <option key={taller.id} value={taller.id}>
+                    {taller.label}
+                  </option>
+                ))}
+              </select>
               {/* <Autocomplete
                 id="taller"
                 className="w-full border-2 border-[#7678FF] outline-none rounded-sm"
