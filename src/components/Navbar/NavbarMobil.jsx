@@ -43,7 +43,7 @@ const MobilNavigationPage = ({ setOpen }) => {
       >
         <MobilNavigationLabel label={"inicio"} />
         <MobilNavigationLabel label={"registro"} />
-        <MobilNavigationLabel label={"webinars"} />
+        <MobilNavigationLabel label={"actividades"} />
         <MobilNavigationLabel label={"FAQ"} />
       </div>
     </div>
@@ -54,7 +54,7 @@ const MobilNavigationLabel = ({ label }) => {
   const getIcon = {
     inicio: "/houseWhite.png",
     registro: "/person.png",
-    webinars: "/calendarWhite.png",
+    actividades: "/calendarWhite.png",
     FAQ: "/questionWhite.png",
   };
 
