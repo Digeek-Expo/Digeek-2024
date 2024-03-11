@@ -1,57 +1,73 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as Yup from "yup";
-import { supabaseClient } from "../../uploadImg";
+import { Autocomplete, Input, TextField } from "@mui/material";
+import { createClient } from "@supabase/supabase-js";
+
+const DBURL = import.meta.env.PUBLIC_DBURL;
+const APIKEY = import.meta.env.PUBLIC_APIKEY;
+
+export const supabaseClient = createClient(DBURL, APIKEY);
 
 const RegistrationForm = () => {
-  const [image, setImage] = useState(null);
+  const [talleresOptions, setTalleresOptions] = useState([]);
 
-  const onImageChange = async (event, values) => {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-
+  useEffect(() => {
+    const fetchTalleresOptions = async () => {
       try {
-        // Cargar la imagen al bucket de Supabase
-        const { data, error } = await supabaseClient.storage
-          .from("Digeek2024-comprobantes")
-          .upload(file.name, file);
+        const { data: talleresData, error: talleresError } =
+          await supabaseClient
+            .from("workshops")
+            .select("workshop_id, workshop_name, workshop_date, capacity");
 
-        console.log("Respuesta de carga de imágenes:", data);
-
-        if (error) {
-          console.error("Error en la carga de imágenes:", error);
-        } else if (data && data.path) {
-          // Obtener la URL pública utilizando getPublicUrl
-          const { data: publicUrlData, error: publicUrlError } =
-            await supabaseClient.storage
-              .from("Digeek2024-comprobantes")
-              .getPublicUrl(data.path);
-
-          console.log("Respuesta de getPublicUrl:", publicUrlData);
-
-          if (publicUrlError) {
-            console.error("Error al obtener la URL pública:", publicUrlError);
-          } else if (publicUrlData && publicUrlData.publicUrl) {
-            // Almacenar la URL de la imagen en el campo comprobante
-            values.comprobante = publicUrlData.publicUrl;
-            setImage(publicUrlData.publicUrl);
-          } else {
-            console.error(
-              "La respuesta de getPublicUrl no contiene una propiedad válida para la URL pública:",
-              publicUrlData
-            );
-          }
-        } else {
+        if (talleresError) {
           console.error(
-            "La respuesta de carga de imagen no contiene la propiedad path:",
-            data
+            "Error al obtener la lista de talleres:",
+            talleresError
           );
+          return;
         }
+
+        const { data: usersData, error: usersError } = await supabaseClient
+          .from("users")
+          .select("workshop_id");
+
+        if (usersError) {
+          console.error("Error al obtener la lista de usuarios:", usersError);
+          return;
+        }
+
+        const workshopsWithParticipants = usersData.reduce(
+          (accumulator, user) => {
+            if (!accumulator[user.workshop_id]) {
+              accumulator[user.workshop_id] = 0;
+            }
+            accumulator[user.workshop_id]++;
+            return accumulator;
+          },
+          {}
+        );
+
+        const talleresOptions = talleresData
+          .filter((taller) => {
+            const participantes =
+              workshopsWithParticipants[taller.workshop_id] || 0;
+            return participantes < taller.capacity;
+          })
+          .map((taller) => ({
+            id: taller.workshop_id,
+            label: `${taller.workshop_name} - ${taller.workshop_date}`,
+            date: taller.workshop_date,
+          }));
+
+        setTalleresOptions(talleresOptions);
       } catch (error) {
-        console.error("Error al cargar la imagen al bucket:", error);
+        console.error("Error en la solicitud de talleres:", error);
       }
-    }
-  };
+    };
+
+    fetchTalleresOptions();
+  }, []);
 
   const registroSchema = Yup.object().shape({
     nombre: Yup.string()
@@ -64,19 +80,51 @@ const RegistrationForm = () => {
       .max(50, "Muy Largo")
       .required("Obligatorio"),
     terminos: Yup.boolean().oneOf([true], "Debes aceptar los términos"),
-    comprobante: Yup.mixed().required("Obligatorio"),
+    taller: Yup.object()
+      .required("Selecciona un taller")
+      .shape({
+        id: Yup.number().required("ID del taller es obligatorio"),
+        label: Yup.string().required("Etiqueta del taller es obligatoria"),
+        date: Yup.string().required("Fecha del taller es obligatoria"),
+      }),
   });
 
   const insertarDatosEnBD = async (datos) => {
     try {
-      const { data, error } = await supabaseClient
-        .from("users")
-        .insert([datos]);
+      const { data, error } = await supabaseClient.from("users").insert([
+        {
+          nombre: datos.nombre,
+          correo: datos.correo,
+          escuela: datos.escuela,
+          workshop_id: datos.taller.id,
+        },
+      ]);
+
       if (error) {
         console.error(error);
-      } else {
-        console.log("Datos enviados correctamente:", data);
+        return;
       }
+
+      console.log("Datos enviados correctamente:", data);
+
+      const { data: tallerData, error: tallerError } = await supabaseClient
+        .from("workshops")
+        .select("capacity")
+        .eq("workshop_id", datos.taller.id);
+
+      if (tallerError) {
+        console.error("Error al obtener la capacidad del taller:", tallerError);
+        return;
+      }
+
+      const capacidadActual = tallerData[0]?.capacity || 0;
+
+      const nuevaCapacidad = Math.max(0, capacidadActual - 1);
+
+      await supabaseClient
+        .from("workshops")
+        .update({ capacity: nuevaCapacidad })
+        .eq("workshop_id", datos.taller.id);
     } catch (error) {
       console.error("Error al insertar en la base de datos:", error);
     }
@@ -90,100 +138,111 @@ const RegistrationForm = () => {
           nombre: "",
           correo: "",
           escuela: "",
-          comprobante: null,
+          taller: null,
         }}
         validationSchema={registroSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          if (
-            values.nombre &&
-            values.correo &&
-            values.escuela &&
-            values.comprobante
-          ) {
-            const { terminos, ...datosSinTerminos } = values;
-            insertarDatosEnBD(datosSinTerminos);
-            setTimeout(() => {
-              alert(JSON.stringify({ ...values }, null, 2));
+        onSubmit={async (values, { setSubmitting }) => {
+          try {
+            if (
+              !(
+                values.nombre &&
+                values.correo &&
+                values.escuela &&
+                values.taller
+              )
+            ) {
+              alert(
+                "Por favor, completa todos los campos antes de enviar el formulario."
+              );
               setSubmitting(false);
-            }, 400);
-          } else {
-            alert(
-              "Por favor, completa todos los campos antes de enviar el formulario."
-            );
+              return;
+            }
+            const { terminos, ...datosSinTerminos } = values;
+
+            await insertarDatosEnBD(datosSinTerminos);
+
+            alert("Datos enviados correctamente");
+            setSubmitting(false);
+            window.location.href = "/";
+          } catch (error) {
+            console.error("Error al enviar datos a la base de datos:", error);
             setSubmitting(false);
           }
         }}
       >
-        {({ isSubmitting, errors, values }) => (
+        {({ isSubmitting, errors, values, setFieldValue }) => (
           <Form className="flex flex-col gap-8 w-full items-end font-thin mt-10">
-          <div className="w-full relative">
-            <Field
-              type="nombre"
-              name="nombre"
-              placeholder="Carlos Perez"
-              component={InputComponent}
-            />
-            <ErrorMessage name="nombre" component={ErrorComponent} />
-          </div>
-          <div className="w-full relative">
-            <Field
-              name="correo"
-              placeholder="carlosperez@gmail.com"
-              component={InputComponent}
-            />
-            <ErrorMessage name="correo" component={ErrorComponent} />
-          </div>
-          <div className="w-full relative">
-            <Field
-              name="escuela"
-              placeholder="CETYS Universidad Campus Ensenada"
-              component={InputComponent}
-            />
-            <ErrorMessage name="escuela" component={ErrorComponent} />
-          </div>
-        
-          <div className="w-full relative">
-            <Field
-              type="text"
-              id="autocomplete"
-              list="options"
-              name="Taller"
-              placeholder="Escribe aquí"
-              component={InputComponent}
-            />
-            <datalist id="options">
-              <option value="Elementos Básicos de Composición Fotográfica"></option>
-              <option value="UI/UX: Design Thinking"></option>
-              <option value="Tamagotchi Battle"></option>
-            </datalist>
-            <ErrorMessage name="Taller" component={ErrorComponent} />
-          </div>
-        
-          <div className="flex w-full items-center gap-2">
-            <Field type="checkbox" name="terminos" className="w-4 h-4" />
-            <label>
-              He leído y acepto los{" "}
-              <a href="#" className="text-[#7678FF] font-normal">
-                Términos y Condiciones
-              </a>
-              , Digeek’ 23
-            </label>
-          </div>
-          <button
-            type="submit"
-            disabled={isSubmitting || Object.keys(errors).length > 0}
-            className="md:w-[120px] w-full py-2 font-bold h-10 rounded-sm text-white bg-[#7678FF] disabled:opacity-60 flex justify-center items-center"
-          >
-            {isSubmitting ? (
-              <svg
-                className="animate-spin h-5 w-5 rounded-full text-white border-2 border-white border-b-slate-500"
-                viewBox="0 0 24 24"
-              ></svg>
-            ) : (
-              "Enviar"
-            )}
-          </button>
-        </Form>
+            <div className="w-full relative">
+              <Field
+                type="nombre"
+                name="nombre"
+                placeholder="Carlos Perez"
+                component={InputComponent}
+              />
+              <ErrorMessage name="nombre" component={ErrorComponent} />
+            </div>
+            <div className="w-full relative">
+              <Field
+                name="correo"
+                placeholder="carlosperez@gmail.com"
+                component={InputComponent}
+              />
+              <ErrorMessage name="correo" component={ErrorComponent} />
+            </div>
+            <div className="w-full relative">
+              <Field
+                name="escuela"
+                placeholder="CETYS Universidad Campus Ensenada"
+                component={InputComponent}
+              />
+              <ErrorMessage name="escuela" component={ErrorComponent} />
+            </div>
+
+            <div className="w-full relative">
+              <label className="text-[#7678FF] text-sm font-bold capitalize after:content-['*'] after:ml-0.5 after:text-[#FF42BA]">
+                Taller
+              </label>
+              <Autocomplete
+                id="taller"
+                className="w-full border-2 border-[#7678FF] outline-none rounded-sm"
+                options={talleresOptions}
+                getOptionLabel={(option) => option.label || ""}
+                value={values.taller}
+                onChange={(event, newValue) => {
+                  setFieldValue("taller", newValue);
+                }}
+                disableClearable
+                renderInput={(params) => <TextField {...params} />}
+              />
+
+              <ErrorMessage name="taller" component={ErrorComponent} />
+            </div>
+
+            <div className="flex w-full items-center gap-2">
+              <Field type="checkbox" name="terminos" className="w-4 h-4" />
+              <label>
+                He leído y acepto los{" "}
+                <a href="#" className="text-[#7678FF] font-normal">
+                  Términos y Condiciones
+                </a>
+                , Digeek’ 23
+              </label>
+            </div>
+            <button
+              type="submit"
+              disabled={isSubmitting || Object.keys(errors).length > 0}
+              className="md:w-[120px] w-full py-2 font-bold h-10 rounded-sm text-white bg-[#7678FF] disabled:opacity-60 flex justify-center items-center"
+            >
+              {isSubmitting ? (
+                <svg
+                  className="animate-spin h-5 w-5 rounded-full text-white border-2 border-white border-b-slate-500"
+                  viewBox="0 0 24 24"
+                ></svg>
+              ) : (
+                "Enviar"
+              )}
+            </button>
+          </Form>
         )}
       </Formik>
     </div>
