@@ -1,33 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Question from "../components/FQA/Question.jsx";
 ---
 
 <Layout title="Digeek 2024">
-  <main
-    class="bg-[#141414] w-full h-screen py-12 md:px-20 text-white mt-[100px]"
-  >
-    <div class="mx-auto flex flex-col w-5/6">
-      <Question
-        client:idle
-        question="¿Cuándo es Digeek?"
-        answer="14 y 15 de Marzo."
-      />
-      <Question
-        client:idle
-        question="¿Cómo me registro?"
-        answer="En la opción de registro en el menú de esta página."
-      />
-      <Question
-        client:idle
-        question="¿Quiénes pueden asistir a Digeek?"
-        answer="Jóvenes de preparatoria, universidad de carreras afines, personas con interés en la tecnología y las artes digitales."
-      />
-      <Question
-        client:idle
-        question="¿Dónde es Digeek?"
-        answer="En el Gimnasio Quimical de CETYS Campus Ensenada."
-      />
-    </div>
-  </main>
+  <main>faq</main>
 </Layout>

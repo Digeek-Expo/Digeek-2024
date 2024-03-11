@@ -7,8 +7,7 @@
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "toolbar": "astro preferences disable devToolbar"
+    "astro": "astro"
   },
   "dependencies": {
     "@astrojs/check": "^0.5.5",
@@ -16,7 +15,6 @@
     "@astrojs/tailwind": "^5.1.0",
     "@mui/material": "^5.15.12",
     "@supabase/supabase-js": "^2.39.7",
-    "dotenv": "^16.4.5",
     "@types/react": "^18.2.60",
     "@types/react-dom": "^18.2.19",
     "astro": "^4.4.3",

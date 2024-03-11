@@ -11,7 +11,7 @@ export const supabaseClient = createClient(DBURL, APIKEY);
 
 const RegistrationForm = () => {
   const [talleresOptions, setTalleresOptions] = useState([]);
-  
+
   useEffect(() => {
     const fetchTalleresOptions = async () => {
       try {
@@ -46,7 +46,6 @@ const RegistrationForm = () => {
 
     fetchTalleresOptions();
   }, []);
-
 
   const registroSchema = Yup.object().shape({
     nombre: Yup.string()

@@ -6,7 +6,7 @@ const NavbarMobil = () => {
   return (
     <>
       <div
-        className="lg:hidden flex flex-col justify-center gap-1 px-6 z-10"
+        className="lg:hidden flex flex-col justify-center gap-1 px-6"
         onClick={() => setOpen((state) => !state)}
       >
         <div className="w-3 h-3 bg-white rounded-full" />
@@ -31,7 +31,7 @@ const MobilNavigationPage = ({ setOpen }) => {
   };
 
   return (
-    <div className="fixed right-0 top-0 w-[100vw] flex z-[1000] ">
+    <div className="fixed right-0 top-0 w-[100vw] flex z-10 ">
       <div
         className="cosa h-screen w-[30vw] bg-black bg-opacity-20 animate-menuAnimationIn"
         onClick={handleCloseNavigation}
