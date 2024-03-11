@@ -28,31 +28,9 @@ const RegistrationForm = () => {
           return;
         }
 
-        const { data: usersData, error: usersError } = await supabaseClient
-          .from("users")
-          .select("workshop_id");
-
-        if (usersError) {
-          console.error("Error al obtener la lista de usuarios:", usersError);
-          return;
-        }
-
-        const workshopsWithParticipants = usersData.reduce(
-          (accumulator, user) => {
-            if (!accumulator[user.workshop_id]) {
-              accumulator[user.workshop_id] = 0;
-            }
-            accumulator[user.workshop_id]++;
-            return accumulator;
-          },
-          {}
-        );
-
         const talleresOptions = talleresData
           .filter((taller) => {
-            const participantes =
-              workshopsWithParticipants[taller.workshop_id] || 0;
-            return participantes <= taller.capacity;
+            return taller.capacity > 0;
           })
           .map((taller) => ({
             id: taller.workshop_id,
@@ -91,40 +69,44 @@ const RegistrationForm = () => {
 
   const insertarDatosEnBD = async (datos) => {
     try {
-      const { data, error } = await supabaseClient.from("users").insert([
-        {
-          nombre: datos.nombre,
-          correo: datos.correo,
-          escuela: datos.escuela,
-          workshop_id: datos.taller.id,
-        },
-      ]);
-
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-      console.log("Datos enviados correctamente:", data);
-
       const { data: tallerData, error: tallerError } = await supabaseClient
         .from("workshops")
         .select("capacity")
         .eq("workshop_id", datos.taller.id);
-
       if (tallerError) {
-        console.error("Error al obtener la capacidad del taller:", tallerError);
+        alerta("Error al obtener talleres");
         return;
       }
+      if (tallerData[0].capacity == 0) {
+        alert("El taller seleccionado ya no tiene capacidad");
+        return;
+      }
+      if (tallerData[0])
+        if (!tallerError && tallerData[0].capacity > 0) {
+          const { data, error } = await supabaseClient.from("users").insert([
+            {
+              nombre: datos.nombre,
+              correo: datos.correo,
+              escuela: datos.escuela,
+              workshop_id: datos.taller.id,
+            },
+          ]);
 
-      const capacidadActual = tallerData[0]?.capacity || 0;
+          if (error) {
+            console.error(error);
+            return;
+          }
 
-      const nuevaCapacidad = Math.max(0, capacidadActual - 1);
+          const capacidadActual = tallerData[0]?.capacity || 0;
 
-      await supabaseClient
-        .from("workshops")
-        .update({ capacity: nuevaCapacidad })
-        .eq("workshop_id", datos.taller.id);
+          const nuevaCapacidad = Math.max(0, capacidadActual - 1);
+
+          await supabaseClient
+            .from("workshops")
+            .update({ capacity: nuevaCapacidad })
+            .eq("workshop_id", datos.taller.id);
+          alert("Datos enviados correctamente");
+        }
     } catch (error) {
       console.error("Error al insertar en la base de datos:", error);
     }
@@ -138,6 +120,7 @@ const RegistrationForm = () => {
           nombre: "",
           correo: "",
           escuela: "",
+          terminos: false,
           taller: null,
         }}
         validationSchema={registroSchema}
@@ -161,7 +144,6 @@ const RegistrationForm = () => {
 
             await insertarDatosEnBD(datosSinTerminos);
 
-            alert("Datos enviados correctamente");
             setSubmitting(false);
             window.location.href = "/";
           } catch (error) {
