@@ -1,0 +1,45 @@
+---
+interface Props {
+  name: string;
+  time: string;
+  description: string;
+  isOdd: boolean;
+  //img: string;
+}
+
+const { name, time, description, isOdd /*img*/ } = Astro.props;
+---
+
+<div
+  class="event flex items-center relative group min-h-[6rem] max-w-[16rem] sm:w-[18rem] md:w-[20rem] lg:w-[24rem] 2xl:w-[40rem] z-0"
+  onclick="handleClick(event)"
+>
+  <div
+    class={` absolute top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-5 h-5 rotate-45  ${isOdd ? "bg-[#00FAEE]" : "bg-[#FF42BA]"}  group-hover:ring-2 ring-white`}
+  >
+  </div>
+  <div class="flex flex-col items-start p-4 translate-x-4">
+    <h2 id="event-title" class="text-lg text-white font-semibold -">{name}</h2>
+    <h2 id="event-time" class="text-white text text-sm">{time}</h2>
+  </div>
+
+  <!-- hidden element, showed with onclick -->
+  <img
+    id="event-arrow"
+    class="hidden ml-10 w-10 h-10"
+    src="./arrowLeft.png"
+    alt="Arrow pointing to the event clicked"
+  />
+
+  <!-- hidden element, showed on purple container
+  <img
+    id="event-img"
+    class="hidden m-4 w-10 h-10"
+    src={img}
+    alt="Arrow pointing to the event clicked"
+  />
+  -->
+
+  <!-- hidden, when clicked, It would pass the text description to the purple container in webinars -->
+  <h3 id="event-description" class="hidden">{description}</h3>
+</div>
