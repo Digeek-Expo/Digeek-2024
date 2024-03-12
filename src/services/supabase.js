@@ -15,7 +15,7 @@ export const uploadImgToStogare = async (file) => {
     } else {
       console.log(data);
       const comprabanteImgUrl =
-        "https://kizjkvmgovpopsykducc.supabase.co/storage/v1/object/public/" +
+        DBURL +
         data.fullPath;
       alert("Image uploaded successfully");
       return comprabanteImgUrl;
